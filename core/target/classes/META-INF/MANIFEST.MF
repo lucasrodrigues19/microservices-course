@@ -1,0 +1,9 @@
+Manifest-Version: 1.0
+Built-By: lucas.rodrigues
+Build-Jdk: 11.0.2
+Implementation-Title: core
+Implementation-Version: 1.0-SNAPSHOT
+Implementation-Vendor-Id: com.lucasrodrigues
+Implementation-URL: http://www.example.com
+Created-By: Maven Integration for Eclipse
+
