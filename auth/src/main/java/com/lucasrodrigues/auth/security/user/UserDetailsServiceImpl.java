@@ -23,11 +23,16 @@ import lombok.extern.slf4j.Slf4j;
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class UserDetailsServiceImpl implements UserDetailsService {
 
+	@Autowired
 	private ApplicationUserRepository applicationUserRepository;
 
 	@Override
-	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+	public UserDetails loadUserByUsername(String username) {
 		log.info("Procurando no BD o user por username'{}'", username);
+		
+		if(applicationUserRepository == null)
+			throw new IllegalArgumentException("applicationUserRepository esta null");
+		
 		ApplicationUser applicationUser = applicationUserRepository.findByUsername(username);
 		log.info("ApplicationUser found'{}'", applicationUser);
 
@@ -49,43 +54,33 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 		@Override
 		public Collection<? extends GrantedAuthority> getAuthorities() {
 			// TODO Auto-generated method stub
-			return AuthorityUtils.commaSeparatedStringToAuthorityList("ROLE_" + getUs_role());
+			return AuthorityUtils.commaSeparatedStringToAuthorityList("ROLE_" + getRole());
 		}
 
-		@Override
-		public String getPassword() {
-			// TODO Auto-generated method stub
-			return null;
-		}
 
-		@Override
-		public String getUsername() {
-			// TODO Auto-generated method stub
-			return null;
-		}
-
+		//todos esses metodos abaixo precisam retornar 'true', se não a autenticação não funciona
 		@Override
 		public boolean isAccountNonExpired() {
 			// TODO Auto-generated method stub
-			return false;
+			return true;
 		}
 
 		@Override
 		public boolean isAccountNonLocked() {
 			// TODO Auto-generated method stub
-			return false;
+			return true;
 		}
 
 		@Override
 		public boolean isCredentialsNonExpired() {
 			// TODO Auto-generated method stub
-			return false;
+			return true;
 		}
 
 		@Override
 		public boolean isEnabled() {
 			// TODO Auto-generated method stub
-			return false;
+			return true;
 		}
 
 	}

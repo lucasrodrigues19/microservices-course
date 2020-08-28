@@ -14,6 +14,31 @@ eureka:
       defaultZone: http://localhost:8081/eureka/
     fetch-registry: true
     register-with-eureka: true
+    healthcheck:
+      enabled: true
     
+        
 zuul: 
   sensitive-headers: Cookie
+  host:
+    connect-timeout-millis: 60000
+    max-per-route-connections: 10000
+    max-total-connections: 5000
+    socket-timeout-millis: 60000
+  semaphore:
+    max-semaphores: 500
+  ribbon:
+    eager-load:
+      enabled: true
+   
+hystrix:
+  command:
+    defaut:
+      execution:
+        isolation:
+            thread:
+              timeoutInMilliseconds: 60000
+       
+ribbon:
+  ConnectTimeout: 3000
+  ReadTimeout: 60000

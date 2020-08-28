@@ -18,7 +18,7 @@ import lombok.ToString;
 
 
 @Entity
-@Table(name = "tb_user")
+@Table(name = "tb_applicationuser")
 @Getter
 @Setter
 @Builder
@@ -26,7 +26,6 @@ import lombok.ToString;
 @AllArgsConstructor
 @ToString
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
-
 public class ApplicationUser implements AbstractEntity{
 
 	
@@ -35,25 +34,26 @@ public class ApplicationUser implements AbstractEntity{
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@EqualsAndHashCode.Include
-	private Long us_id;
+	private Long id;
 	
 	@NotNull(message = "The field 'username' is mandatory")
 	@Column(nullable = false)
-	private String us_username;
+	private String username;
 	
+	@ToString.Exclude
 	@NotNull(message = "The field 'password' is mandatory")
 	@Column(nullable = false)
-	private String us_password;
+	private String password;
 	
 	@NotNull(message = "The field 'role' is mandatory")
 	@Column(nullable = false)
-	private String us_role = "USER";
+	private String role = "USER";
 	
 	public ApplicationUser(@NotNull ApplicationUser applicationUser) {
-		this.us_id = applicationUser.getUs_id();
-		this.us_username = applicationUser.getUs_username();
-		this.us_password = applicationUser.getUs_password();
-		this.us_role = 	applicationUser.getUs_role();
+		this.id = applicationUser.getId();
+		this.username = applicationUser.getUsername();
+		this.password = applicationUser.getPassword();
+		this.role = 	applicationUser.getRole();
 		}
 	@Override
 	public Long getIde() {

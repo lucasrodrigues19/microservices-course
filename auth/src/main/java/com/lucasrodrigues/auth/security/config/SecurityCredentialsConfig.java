@@ -14,16 +14,26 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
 
+import com.lucasrodrigues.auth.security.filter.JwtUsernameAndPasswordAuthenticationFilter;
 import com.lucasrodrigues.core.property.JwtConfiguration;
 
 import lombok.RequiredArgsConstructor;
 
 @EnableWebSecurity
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
+/**
+ * Essa classe vai dizer o que vai ser bloqueado, e como vai funcionar esse microservico
+ * @author lucas.rodrigues
+ *
+ */
 public class SecurityCredentialsConfig extends WebSecurityConfigurerAdapter {
 	
 	private final UserDetailsService userDetailsService;
 	private final JwtConfiguration jwtConfiguration;
+	
+	/**
+	 * Configuração do Http
+	 */
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
 		http
@@ -34,11 +44,14 @@ public class SecurityCredentialsConfig extends WebSecurityConfigurerAdapter {
 				.and()
 					.exceptionHandling().authenticationEntryPoint((req,resp,e)->resp.sendError(HttpServletResponse.SC_UNAUTHORIZED)) //tratar as execoes relacionadas ao authentication entrypoint	
 				.and()
-					.addFilter(new UsernamePasswordAuthenticationFilter())
+					.addFilter(new JwtUsernameAndPasswordAuthenticationFilter(authenticationManager(),jwtConfiguration))
 				.authorizeRequests()
-					.antMatchers(jwtConfiguration.getLoginUrl()).permitAll()
-					.antMatchers("/course/admin/**").hasRole("ADMIN")
-					.anyRequest().authenticated();	
+					.antMatchers(jwtConfiguration.getLoginUrl()).permitAll() //permite q a url do login seja acessada
+					.antMatchers("/course/v1/admin/**").hasRole("ADMIN")
+					.anyRequest().authenticated()	//qualquer outra requisição precisa esta autenticada
+				.and()
+					.formLogin().disable();
+		//
 	}
 
 	/**
