@@ -1,35 +1,40 @@
 package com.lucasrodrigues.auth.security.config;
 
-import javax.servlet.http.HttpServletResponse;
-
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
-import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import org.springframework.web.cors.CorsConfiguration;
 
 import com.lucasrodrigues.auth.security.filter.JwtUsernameAndPasswordAuthenticationFilter;
 import com.lucasrodrigues.core.property.JwtConfiguration;
+import com.lucasrodrigues.token.security.config.SecurityTokenConfig;
+import com.lucasrodrigues.token.security.token.creator.TokenCreator;
 
-import lombok.RequiredArgsConstructor;
 
-@EnableWebSecurity
-@RequiredArgsConstructor(onConstructor = @__(@Autowired))
 /**
  * Essa classe vai dizer o que vai ser bloqueado, e como vai funcionar esse microservico
  * @author lucas.rodrigues
  *
  */
-public class SecurityCredentialsConfig extends WebSecurityConfigurerAdapter {
+@EnableWebSecurity
+public class SecurityCredentialsConfig extends SecurityTokenConfig {
+	
 	
 	private final UserDetailsService userDetailsService;
-	private final JwtConfiguration jwtConfiguration;
+	private final TokenCreator tokenCreator;
+	
+	@Autowired
+	public SecurityCredentialsConfig(JwtConfiguration jwtConfiguration,
+			@Qualifier("userDetailsServiceImpl") UserDetailsService userDetailsService,
+			TokenCreator tokenCreator) {
+		super(jwtConfiguration);
+		this.userDetailsService = userDetailsService;
+		this.tokenCreator = tokenCreator;
+	}
 	
 	/**
 	 * Configuração do Http
@@ -37,20 +42,8 @@ public class SecurityCredentialsConfig extends WebSecurityConfigurerAdapter {
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
 		http
-				.csrf().disable()
-				.cors().configurationSource(request -> new CorsConfiguration().applyPermitDefaultValues())
-				.and()
-					.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)//nao vou manter nem um tipo de sessao
-				.and()
-					.exceptionHandling().authenticationEntryPoint((req,resp,e)->resp.sendError(HttpServletResponse.SC_UNAUTHORIZED)) //tratar as execoes relacionadas ao authentication entrypoint	
-				.and()
-					.addFilter(new JwtUsernameAndPasswordAuthenticationFilter(authenticationManager(),jwtConfiguration))
-				.authorizeRequests()
-					.antMatchers(jwtConfiguration.getLoginUrl()).permitAll() //permite q a url do login seja acessada
-					.antMatchers("/course/v1/admin/**").hasRole("ADMIN")
-					.anyRequest().authenticated()	//qualquer outra requisição precisa esta autenticada
-				.and()
-					.formLogin().disable();
+					.addFilter(new JwtUsernameAndPasswordAuthenticationFilter(authenticationManager(),jwtConfiguration,tokenCreator));
+					super.configure(http);
 		//
 	}
 
@@ -68,4 +61,6 @@ public class SecurityCredentialsConfig extends WebSecurityConfigurerAdapter {
 	public BCryptPasswordEncoder passwordEncoder() {
 		return new BCryptPasswordEncoder();
 	}
+
+	
 }

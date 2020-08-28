@@ -23,8 +23,7 @@ import lombok.extern.slf4j.Slf4j;
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class UserDetailsServiceImpl implements UserDetailsService {
 
-	@Autowired
-	private ApplicationUserRepository applicationUserRepository;
+	private final ApplicationUserRepository applicationUserRepository;
 
 	@Override
 	public UserDetails loadUserByUsername(String username) {
