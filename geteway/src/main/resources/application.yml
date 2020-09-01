@@ -42,3 +42,10 @@ hystrix:
 ribbon:
   ConnectTimeout: 3000
   ReadTimeout: 60000
+  
+ 
+ 
+ 
+jwt:
+  config:
+    login-url: /auth/login 

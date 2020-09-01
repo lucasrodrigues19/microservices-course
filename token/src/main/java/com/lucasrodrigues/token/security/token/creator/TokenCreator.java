@@ -82,7 +82,11 @@ public class TokenCreator {
 		log.info("Criando o objeto JWTClaimSet para '{}", applicationUser);
 		return new JWTClaimsSet.Builder().subject(applicationUser.getUsername())
 				.claim("authorities",
-						auth.getAuthorities().stream().map(GrantedAuthority::getAuthority).collect(Collectors.toList()))
+						auth.getAuthorities()
+						.stream()
+						.map(GrantedAuthority::getAuthority)
+						.collect(Collectors.toList()))
+				.claim("userId", applicationUser.getId())
 				.issuer("http://com.lucasrodrigues").issueTime(new Date())
 				.expirationTime(new Date(System.currentTimeMillis() + (jwtConfiguration.getExpiration() * 1000)))
 				.build();

@@ -1,11 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<parent>
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
 		<version>2.3.3.RELEASE</version>
-		<relativePath/> <!-- lookup parent from repository -->
+		<relativePath /> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>com.lucasrodrigues</groupId>
 	<artifactId>microservices-devdovjo</artifactId>
@@ -18,8 +20,8 @@
 		<module>course</module>
 		<module>core</module>
 		<module>discovery</module>
-    <module>token</module>
-  </modules>
+		<module>token</module>
+	</modules>
 
 	<properties>
 		<spring-cloud.version>Hoxton.SR7</spring-cloud.version>
@@ -27,11 +29,18 @@
 	</properties>
 
 	<dependencies>
-	<dependency>
-	<groupId>com.nimbusds</groupId>
-	<artifactId>nimbus-jose-jwt</artifactId>
-	<version>${nimbus-jose.version}</version>
-	</dependency>
+		<!-- https://mvnrepository.com/artifact/org.apache.commons/commons-lang3 -->
+		<dependency>
+			<groupId>org.apache.commons</groupId>
+			<artifactId>commons-lang3</artifactId>
+			<version>3.11</version>
+		</dependency>
+
+		<dependency>
+			<groupId>com.nimbusds</groupId>
+			<artifactId>nimbus-jose-jwt</artifactId>
+			<version>${nimbus-jose.version}</version>
+		</dependency>
 
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
@@ -90,7 +99,8 @@
 			<version>1.0.2.Final</version>
 		</dependency>
 		<dependency>
-			<groupId>org.springframework.cloud</groupId><!-- Todos os registros precisam se registrar no eureka server -->
+			<groupId>org.springframework.cloud</groupId><!-- Todos os registros precisam 
+				se registrar no eureka server -->
 			<artifactId>spring-cloud-starter-netflix-eureka-client</artifactId>
 		</dependency>
 	</dependencies>

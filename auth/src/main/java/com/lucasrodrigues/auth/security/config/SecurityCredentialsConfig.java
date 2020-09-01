@@ -8,10 +8,13 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 import com.lucasrodrigues.auth.security.filter.JwtUsernameAndPasswordAuthenticationFilter;
 import com.lucasrodrigues.core.property.JwtConfiguration;
 import com.lucasrodrigues.token.security.config.SecurityTokenConfig;
+import com.lucasrodrigues.token.security.filter.JwtTokenAuthorizationFilter;
+import com.lucasrodrigues.token.security.token.converter.TokenConverter;
 import com.lucasrodrigues.token.security.token.creator.TokenCreator;
 
 
@@ -26,14 +29,16 @@ public class SecurityCredentialsConfig extends SecurityTokenConfig {
 	
 	private final UserDetailsService userDetailsService;
 	private final TokenCreator tokenCreator;
+	private final TokenConverter tokenConverter;
 	
 	@Autowired
 	public SecurityCredentialsConfig(JwtConfiguration jwtConfiguration,
 			@Qualifier("userDetailsServiceImpl") UserDetailsService userDetailsService,
-			TokenCreator tokenCreator) {
+			TokenCreator tokenCreator,TokenConverter tokenConverter) {
 		super(jwtConfiguration);
 		this.userDetailsService = userDetailsService;
 		this.tokenCreator = tokenCreator;
+		this.tokenConverter = tokenConverter;
 	}
 	
 	/**
@@ -42,8 +47,9 @@ public class SecurityCredentialsConfig extends SecurityTokenConfig {
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
 		http
-					.addFilter(new JwtUsernameAndPasswordAuthenticationFilter(authenticationManager(),jwtConfiguration,tokenCreator));
-					super.configure(http);
+					.addFilter(new JwtUsernameAndPasswordAuthenticationFilter(authenticationManager(),jwtConfiguration,tokenCreator))
+					.addFilterAfter(new JwtTokenAuthorizationFilter(jwtConfiguration, tokenConverter),UsernamePasswordAuthenticationFilter.class);
+		super.configure(http);
 		//
 	}
 
