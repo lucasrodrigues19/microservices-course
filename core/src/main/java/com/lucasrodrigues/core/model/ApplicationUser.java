@@ -8,6 +8,8 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
@@ -26,6 +28,7 @@ import lombok.ToString;
 @AllArgsConstructor
 @ToString
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class ApplicationUser implements AbstractEntity{
 
 	
@@ -47,6 +50,7 @@ public class ApplicationUser implements AbstractEntity{
 	
 	@NotNull(message = "The field 'role' is mandatory")
 	@Column(nullable = false)
+	@Builder.Default
 	private String role = "USER";
 	
 	public ApplicationUser(@NotNull ApplicationUser applicationUser) {

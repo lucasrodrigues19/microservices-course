@@ -48,4 +48,5 @@ ribbon:
  
 jwt:
   config:
-    login-url: /auth/login 
+    login-url: /auth/login
+    type: signed 

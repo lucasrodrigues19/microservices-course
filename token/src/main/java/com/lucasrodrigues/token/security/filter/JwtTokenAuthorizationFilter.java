@@ -39,7 +39,7 @@ public class JwtTokenAuthorizationFilter extends OncePerRequestFilter {// extend
 	@Override
 	protected void doFilterInternal(@NonNull HttpServletRequest request, @NonNull HttpServletResponse response, @NonNull FilterChain chain)
 			throws ServletException, IOException {
-		log.info("Começando o metodo doFilterInternal");
+		log.info("Começando o metodo doFilterInternal token");
 		String header = request.getHeader(jwtConfiguration.getHeader().getName());
 
 		// Esse filtro pode estar indo para requisições que não precisam ser
@@ -66,7 +66,8 @@ public class JwtTokenAuthorizationFilter extends OncePerRequestFilter {// extend
 	 */
 	@SneakyThrows
 	private SignedJWT decryptValidating(String encryptedToken) {
-		log.info("Começando o metodo decryptValidating");
+		log.info("Começando o metodo decryptValidating"
+				+ ": JwtTokenAuthorizationFilter");
 		String signedToken = tokenConverter.decryptToken(encryptedToken);
 		tokenConverter.validateTokenSignature(signedToken);
 
