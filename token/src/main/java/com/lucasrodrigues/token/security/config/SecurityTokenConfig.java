@@ -3,6 +3,7 @@ package com.lucasrodrigues.token.security.config;
 import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
@@ -37,7 +38,8 @@ public class SecurityTokenConfig extends WebSecurityConfigurerAdapter {
 					.exceptionHandling().authenticationEntryPoint((req,resp,e)->resp.sendError(HttpServletResponse.SC_UNAUTHORIZED)) //tratar as execoes relacionadas ao authentication entrypoint	
 				.and()
 				.authorizeRequests()
-					.antMatchers(jwtConfiguration.getLoginUrl()).permitAll() //permite q a url do login seja acessada
+					.antMatchers(jwtConfiguration.getLoginUrl(), "/**/swagger-ui.html").permitAll() //permite q a url do login seja acessada
+					.antMatchers(HttpMethod.GET, "/**/swagger-resources/**","/**/webjars/springfox-swagger-ui/**","/**/v2/api-docs/**").permitAll() //permite q a url do login seja acessada
 					.antMatchers("/course/v1/admin/**").hasRole("ADMIN")
 					.antMatchers("/auth/user/**").hasAnyRole("ADMIN","USER")
 					.anyRequest().authenticated();	//qualquer outra requisição precisa esta autenticada

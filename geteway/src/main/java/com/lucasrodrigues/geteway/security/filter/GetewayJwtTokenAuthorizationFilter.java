@@ -48,6 +48,7 @@ public class GetewayJwtTokenAuthorizationFilter extends JwtTokenAuthorizationFil
 
 		String token = header.replace(jwtConfiguration.getHeader().getPrefix(), "").trim();
 
+		
 		String signedToken = tokenConverter.decryptToken(token);
 		tokenConverter.validateTokenSignature(signedToken);
 		SecurityContextUtil.setSecurityContext(SignedJWT.parse(signedToken));
